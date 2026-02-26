@@ -170,14 +170,14 @@
     box-shadow: 0 16px 48px rgba(59,31,14,.14);
   }
 
-  /* CARRUSEL: allow slides to grow with the image and show it whole */
+  /* CARRUSEL: fixed height so all cards are identical while
+     the image inside is fully visible. photos should be sized
+     externally / with an editor to roughly the same ratio (4:3,
+     3:2, etc.), but CSS scales any input so you always see the entire
+     picture without cropping. */
   .carousel {
     position: relative;
-    /* allow carousel to grow according to the image's natural size
-       but keep a reasonable limit on very tall photos */
-    max-height: 80vh;
-    /* keep a minimum so emoji-only cards don't collapse completely */
-    min-height: 240px;
+    height: 260px;             /* consistent card height for all items */
     overflow: hidden;
     background: #f5ede0;
     flex-shrink: 0;
@@ -193,11 +193,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* the slide height is determined by its content (the image) */
+    /* image will scale to fit within the fixed-height carousel */
   }
   .carousel-slide img {
     width: 100%;
     height: auto;
+    max-height: 100%;            /* never exceed container height */
     object-fit: contain;          /* show the whole photo, no cropping */
     display: block;
   }
