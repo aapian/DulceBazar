@@ -169,23 +169,19 @@
     box-shadow: 0 12px 40px rgba(59,31,14,.12);
   }
 
-  /* ──────────────────────────────
-     CARRUSEL
-  ────────────────────────────── */
+  /* CARRUSEL */
   .carousel {
     position: relative;
     height: 210px;
     overflow: hidden;
     background: #f5ede0;
   }
-
   .carousel-track {
     display: flex;
     height: 100%;
     transition: transform .4s cubic-bezier(.4,0,.2,1);
     will-change: transform;
   }
-
   .carousel-slide {
     min-width: 100%;
     height: 100%;
@@ -195,21 +191,15 @@
     justify-content: center;
     overflow: hidden;
   }
-
-  /* Slide con imagen real */
   .carousel-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
-
-  /* Slide emoji/placeholder */
   .carousel-slide.emoji-slide {
     font-size: 5.5rem;
   }
-
-  /* Flechas */
   .carousel-btn {
     position: absolute;
     top: 50%;
@@ -235,8 +225,6 @@
   .carousel-btn:hover { background: white; transform: translateY(-50%) scale(1.12); }
   .carousel-btn.prev { left: 8px; }
   .carousel-btn.next { right: 8px; }
-
-  /* Puntos */
   .carousel-dots {
     position: absolute;
     bottom: 10px;
@@ -260,8 +248,6 @@
     background: white;
     transform: scale(1.35);
   }
-
-  /* Contador */
   .carousel-counter {
     position: absolute;
     top: 9px;
@@ -322,7 +308,6 @@
   footer { background:var(--chocolate);color:var(--cream);text-align:center;padding:2rem;font-size:.85rem;font-weight:300; }
   footer strong { color:var(--gold);font-weight:700; }
 
-  /* TOAST */
   .toast {
     position:fixed;bottom:2rem;right:2rem;background:var(--chocolate);color:var(--cream);
     padding:1rem 1.5rem;border-radius:12px;font-size:.9rem;
@@ -402,11 +387,24 @@
 <div class="toast" id="toast"></div>
 
 <script>
-     fotos: [
-       "imagenes/1772067186717.jpg",
-       "imagenes/1772067192717.jpg",
-       "imagenes/1772067196812.jpg"
-     ]
+/*
+  ╔══════════════════════════════════════════════════════╗
+  ║  CÓMO AGREGAR FOTOS A CADA PRODUCTO                  ║
+  ║                                                      ║
+  ║  Pon las rutas de tus fotos dentro de fotos: [...]   ║
+  ║  Las fotos deben estar en la carpeta "imagenes/"     ║
+  ║  dentro del mismo repositorio de GitHub.             ║
+  ║                                                      ║
+  ║  Ejemplo:                                            ║
+  ║    fotos: [                                          ║
+  ║      "imagenes/flan1.jpg",                           ║
+  ║      "imagenes/flan2.jpg",                           ║
+  ║      "imagenes/flan3.jpg"                            ║
+  ║    ]                                                 ║
+  ║                                                      ║
+  ║  Si dejas fotos: []  →  se muestra el emoji          ║
+  ╚══════════════════════════════════════════════════════╝
+*/
 
 const productos = [
   {
@@ -415,9 +413,11 @@ const productos = [
     precio: 45, emoji: "🍰",
     bg: "linear-gradient(135deg,#FFF3DC,#FFE4A8)",
     cat: "pasteles", unidad: "pieza",
-    fotos: []
-    /* Con fotos reales sería:
-    fotos: ["imagenes/panetela1.jpg","imagenes/panetela2.jpg","imagenes/panetela3.jpg"] */
+    fotos: [
+      "imagenes/1772067186717.jpg",
+      "imagenes/1772067192717.jpg",
+      "imagenes/1772067196812.jpg"
+    ]
   },
   {
     nombre: "Flan Napolitano",
@@ -426,6 +426,8 @@ const productos = [
     bg: "linear-gradient(135deg,#FDE8D8,#F5C9A0)",
     cat: "postres", unidad: "pieza",
     fotos: []
+    /* ← agrega aquí las fotos del flan:
+    fotos: ["imagenes/flan1.jpg","imagenes/flan2.jpg"] */
   },
   {
     nombre: "Gelatina de Leche",
@@ -488,7 +490,7 @@ function buildCarousel(p, cid) {
   let slidesHTML = '';
   if (hasPhotos) {
     p.fotos.forEach((src, i) => {
-      slidesHTML += `<div class="carousel-slide"><img src="${src}" alt="${p.nombre} foto ${i+1}" loading="lazy" onerror="this.parentElement.style.background='${p.bg}';this.style.display='none'"></div>`;
+      slidesHTML += `<div class="carousel-slide"><img src="${src}" alt="${p.nombre} foto ${i+1}" loading="lazy" onerror="this.parentElement.classList.add('emoji-slide');this.parentElement.style.background='${p.bg}';this.parentElement.innerHTML='${p.emoji}'"></div>`;
     });
   } else {
     slidesHTML = `<div class="carousel-slide emoji-slide" style="background:${p.bg}">${p.emoji}</div>`;
@@ -498,9 +500,11 @@ function buildCarousel(p, cid) {
     <button class="carousel-btn prev" onclick="move('${cid}',-1)" aria-label="anterior">&#8249;</button>
     <button class="carousel-btn next" onclick="move('${cid}',1)" aria-label="siguiente">&#8250;</button>` : '';
 
-  const dots = count > 1 ? `<div class="carousel-dots" id="dots-${cid}">`
-    + Array.from({length:count},(_,i)=>`<button class="dot${i===0?' on':''}" onclick="goTo('${cid}',${i})" aria-label="foto ${i+1}"></button>`).join('')
-    + `</div>` : '';
+  const dots = count > 1
+    ? `<div class="carousel-dots" id="dots-${cid}">`
+      + Array.from({length:count},(_,i)=>`<button class="dot${i===0?' on':''}" onclick="goTo('${cid}',${i})" aria-label="foto ${i+1}"></button>`).join('')
+      + `</div>`
+    : '';
 
   const counter = count > 1 ? `<div class="carousel-counter" id="cnt-${cid}">1 / ${count}</div>` : '';
 
@@ -516,7 +520,7 @@ function goTo(cid, idx) {
   s.cur = idx;
   document.getElementById(`trk-${cid}`).style.transform = `translateX(-${idx*100}%)`;
   const dotsEl = document.getElementById(`dots-${cid}`);
-  if (dotsEl) dotsEl.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===idx));
+  if (dotsEl) dotsEl.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===idx));
   const cntEl = document.getElementById(`cnt-${cid}`);
   if (cntEl) cntEl.textContent = `${idx+1} / ${s.count}`;
 }
@@ -525,7 +529,6 @@ function move(cid, dir) {
   goTo(cid, state[cid].cur + dir);
 }
 
-/* Swipe táctil */
 function addSwipe(cid) {
   const el = document.getElementById(`car-${cid}`);
   if (!el) return;
@@ -537,11 +540,10 @@ function addSwipe(cid) {
   });
 }
 
-/* ── Render ── */
 let uidCounter = 0;
 function renderMenu(cat) {
   const grid = document.getElementById('menuGrid');
-  const lista = cat === 'todos' ? productos : productos.filter(p=>p.cat===cat);
+  const lista = cat === 'todos' ? productos : productos.filter(p => p.cat === cat);
   grid.innerHTML = '';
   lista.forEach(p => {
     const cid = 'c' + (++uidCounter);
@@ -564,7 +566,7 @@ function renderMenu(cat) {
 }
 
 function filterMenu(cat, btn) {
-  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   renderMenu(cat);
 }
@@ -579,11 +581,11 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3500);
+  setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', e=>{
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
     e.preventDefault();
     document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
   });
