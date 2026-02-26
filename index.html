@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dulcería La Tentación</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF3E0;
+    --caramel: #C47C2B;
+    --dark-caramel: #8B5A1A;
+    --chocolate: #3B1F0E;
+    --rose: #E8907A;
+    --gold: #D4A953;
+    --light-rose: #FDF0EC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    font-family: 'Lato', sans-serif;
+    color: var(--chocolate);
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    background: radial-gradient(ellipse at 60% 40%, #F5DEB3 0%, var(--cream) 60%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(196,124,43,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(232,144,122,0.1) 0%, transparent 40%);
+  }
+  .decorative-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(196,124,43,0.15);
+    pointer-events: none;
+  }
+  .decorative-circle:nth-child(1) { width:600px;height:600px;top:-200px;right:-200px; }
+  .decorative-circle:nth-child(2) { width:400px;height:400px;bottom:-150px;left:-100px;border-color:rgba(232,144,122,0.12); }
+  .decorative-circle:nth-child(3) { width:200px;height:200px;top:50px;left:60px;border-color:rgba(196,124,43,0.08); }
+  .hero-badge {
+    display: inline-block;
+    border: 1px solid var(--caramel);
+    color: var(--caramel);
+    font-size: .7rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .8s ease forwards;
+    opacity: 0;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem,8vw,6rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--chocolate);
+    animation: fadeUp .8s .2s ease forwards;
+    opacity: 0;
+  }
+  .hero h1 em { font-style: italic; color: var(--caramel); }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--dark-caramel);
+    margin-top: 1.2rem;
+    letter-spacing: .05em;
+    animation: fadeUp .8s .4s ease forwards;
+    opacity: 0;
+  }
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    animation: fadeUp .8s .5s ease forwards;
+    opacity: 0;
+  }
+  .hero-divider span { width:60px;height:1px;background:var(--caramel); }
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    animation: fadeUp 1s 1s ease forwards;
+    opacity: 0;
+  }
+  .scroll-hint .arrow { animation: bounce 1.5s infinite; }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,243,224,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(196,124,43,0.15);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-logo { font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--chocolate); }
+  .nav-links { display:flex;gap:2rem;list-style:none; }
+  .nav-links a {
+    text-decoration:none;color:var(--dark-caramel);
+    font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;transition:color .3s;
+  }
+  .nav-links a:hover { color:var(--caramel); }
+
+  /* SECTION */
+  .section { padding:5rem 2rem;max-width:1100px;margin:0 auto; }
+  .section-header { text-align:center;margin-bottom:3.5rem; }
+  .section-tag { font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--caramel);margin-bottom:.8rem; }
+  .section-title { font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);color:var(--chocolate); }
+  .section-line { width:50px;height:2px;background:var(--caramel);margin:1rem auto 0; }
+
+  /* PILLS */
+  .category-pills { display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem; }
+  .pill {
+    padding:8px 22px;border-radius:100px;border:1.5px solid var(--caramel);
+    background:transparent;color:var(--dark-caramel);font-size:.8rem;letter-spacing:.08em;
+    cursor:pointer;transition:all .3s;font-family:'Lato',sans-serif;
+  }
+  .pill.active,.pill:hover { background:var(--caramel);color:white; }
+
+  /* GRID */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+    gap: 2rem;
+  }
+
+  /* CARD */
+  .menu-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(59,31,14,.06);
+    transition: transform .3s, box-shadow .3s;
+  }
+  .menu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(59,31,14,.12);
+  }
+
+  /* ──────────────────────────────
+     CARRUSEL
+  ────────────────────────────── */
+  .carousel {
+    position: relative;
+    height: 210px;
+    overflow: hidden;
+    background: #f5ede0;
+  }
+
+  .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform .4s cubic-bezier(.4,0,.2,1);
+    will-change: transform;
+  }
+
+  .carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Slide con imagen real */
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Slide emoji/placeholder */
+  .carousel-slide.emoji-slide {
+    font-size: 5.5rem;
+  }
+
+  /* Flechas */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255,255,255,.9);
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0,0,0,.15);
+    transition: background .2s, transform .2s;
+    color: var(--chocolate);
+    line-height: 1;
+    padding-bottom: 1px;
+  }
+  .carousel-btn:hover { background: white; transform: translateY(-50%) scale(1.12); }
+  .carousel-btn.prev { left: 8px; }
+  .carousel-btn.next { right: 8px; }
+
+  /* Puntos */
+  .carousel-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.5);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background .25s, transform .25s;
+  }
+  .dot.on {
+    background: white;
+    transform: scale(1.35);
+  }
+
+  /* Contador */
+  .carousel-counter {
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    background: rgba(0,0,0,.38);
+    color: white;
+    font-size: .65rem;
+    padding: 3px 9px;
+    border-radius: 100px;
+    z-index: 10;
+    letter-spacing: .05em;
+    pointer-events: none;
+  }
+
+  /* CARD BODY */
+  .card-body { padding:1.4rem 1.6rem 1.6rem; }
+  .card-tag { font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--caramel);margin-bottom:.4rem; }
+  .card-name { font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--chocolate);margin-bottom:.5rem; }
+  .card-desc { font-size:.85rem;color:#7a5c3a;line-height:1.6;margin-bottom:1.2rem;font-weight:300; }
+  .card-footer { display:flex;justify-content:space-between;align-items:center; }
+  .card-price { font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--caramel); }
+  .card-price span { font-family:'Lato',sans-serif;font-size:.8rem;color:#a07040;font-weight:300; }
+  .card-btn {
+    background:var(--chocolate);color:var(--cream);border:none;
+    padding:10px 20px;border-radius:100px;font-size:.8rem;letter-spacing:.08em;
+    cursor:pointer;transition:background .3s,transform .2s;
+  }
+  .card-btn:hover { background:var(--caramel);transform:scale(1.04); }
+
+  /* BANNER */
+  .banner {
+    background:var(--chocolate);color:var(--cream);
+    padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .banner::before {
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 50%,rgba(196,124,43,.2),transparent 60%),
+               radial-gradient(circle at 70% 50%,rgba(232,144,122,.1),transparent 60%);
+  }
+  .banner h2 { font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);position:relative;margin-bottom:1rem; }
+  .banner p { font-weight:300;font-size:1rem;opacity:.8;position:relative;margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto; }
+  .banner-btn {
+    display:inline-block;background:var(--gold);color:var(--chocolate);
+    text-decoration:none;padding:14px 36px;border-radius:100px;font-weight:700;
+    font-size:.9rem;letter-spacing:.1em;position:relative;transition:transform .3s,box-shadow .3s;
+  }
+  .banner-btn:hover { transform:scale(1.04);box-shadow:0 8px 24px rgba(212,169,83,.4); }
+
+  /* CONTACT */
+  .contact-section { padding:5rem 2rem;background:var(--light-rose);text-align:center; }
+  .contact-grid { display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;max-width:800px;margin-left:auto;margin-right:auto; }
+  .contact-card { background:white;border-radius:16px;padding:2rem;flex:1;min-width:200px;box-shadow:0 4px 16px rgba(59,31,14,.06); }
+  .contact-icon { font-size:2rem;margin-bottom:.8rem; }
+  .contact-card h4 { font-family:'Playfair Display',serif;margin-bottom:.4rem;color:var(--chocolate); }
+  .contact-card p { font-size:.9rem;color:#7a5c3a;font-weight:300; }
+  .contact-card a { color:var(--caramel);text-decoration:none; }
+
+  footer { background:var(--chocolate);color:var(--cream);text-align:center;padding:2rem;font-size:.85rem;font-weight:300; }
+  footer strong { color:var(--gold);font-weight:700; }
+
+  /* TOAST */
+  .toast {
+    position:fixed;bottom:2rem;right:2rem;background:var(--chocolate);color:var(--cream);
+    padding:1rem 1.5rem;border-radius:12px;font-size:.9rem;
+    box-shadow:0 8px 24px rgba(0,0,0,.2);
+    transform:translateY(100px);opacity:0;
+    transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:999;
+    pointer-events: none;
+  }
+  .toast.show { transform:translateY(0);opacity:1; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  @media(max-width:600px){
+    .nav-links{display:none;}
+    .menu-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<section class="hero" id="inicio">
+  <div class="decorative-circle"></div>
+  <div class="decorative-circle"></div>
+  <div class="decorative-circle"></div>
+  <div class="hero-badge">Hecho con amor · Desde 2020</div>
+  <h1>Dulcería<br><em>La Tentación</em></h1>
+  <p class="hero-subtitle">Postres artesanales que endulzan tu día 🍮</p>
+  <div class="hero-divider"><span></span><i>✦</i><span></span></div>
+  <div class="scroll-hint"><span>Ver menú</span><span class="arrow">↓</span></div>
+</section>
+
+<nav>
+  <div class="nav-logo">La Tentación</div>
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<section class="section" id="menu">
+  <div class="section-header">
+    <p class="section-tag">Nuestros productos</p>
+    <h2 class="section-title">El menú del día</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="category-pills">
+    <button class="pill active" onclick="filterMenu('todos',this)">Todos</button>
+    <button class="pill" onclick="filterMenu('postres',this)">Postres</button>
+    <button class="pill" onclick="filterMenu('pasteles',this)">Pasteles</button>
+    <button class="pill" onclick="filterMenu('bebidas',this)">Bebidas</button>
+  </div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<div class="banner">
+  <h2>¿Pedido especial? 🎂</h2>
+  <p>Hacemos pedidos personalizados para cumpleaños, fiestas y eventos. ¡Contáctanos!</p>
+  <a href="https://wa.me/5212345678901?text=Hola!%20Quiero%20hacer%20un%20pedido%20especial" class="banner-btn" target="_blank">📲 Escribir por WhatsApp</a>
+</div>
+
+<section class="contact-section" id="contacto">
+  <div class="section-header">
+    <p class="section-tag">Encuéntranos</p>
+    <h2 class="section-title" style="font-family:'Playfair Display',serif">¿Dónde estamos?</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card"><div class="contact-icon">📍</div><h4>Dirección</h4><p>Calle Dulce #42<br>Col. Centro, Ciudad</p></div>
+    <div class="contact-card"><div class="contact-icon">⏰</div><h4>Horario</h4><p>Lun–Sáb: 9am – 7pm<br>Dom: 10am – 4pm</p></div>
+    <div class="contact-card"><div class="contact-icon">📱</div><h4>WhatsApp</h4><p><a href="https://wa.me/5212345678901" target="_blank">+52 123 456 7890</a></p></div>
+  </div>
+</section>
+
+<footer><p>© 2025 <strong>Dulcería La Tentación</strong> · Todos los derechos reservados</p></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+     fotos: [
+       "imagenes/1772067186717.jpg",
+       "imagenes/1772067192717.jpg",
+       "imagenes/1772067196812.jpg"
+     ]
+
+const productos = [
+  {
+    nombre: "Panetela Clásica",
+    desc: "Bizcocho esponjoso bañado en almíbar con un toque de limón. Receta de la abuela.",
+    precio: 45, emoji: "🍰",
+    bg: "linear-gradient(135deg,#FFF3DC,#FFE4A8)",
+    cat: "pasteles", unidad: "pieza",
+    fotos: []
+    /* Con fotos reales sería:
+    fotos: ["imagenes/panetela1.jpg","imagenes/panetela2.jpg","imagenes/panetela3.jpg"] */
+  },
+  {
+    nombre: "Flan Napolitano",
+    desc: "Cremoso flan con caramelo casero. Textura suave que se deshace en la boca.",
+    precio: 50, emoji: "🍮",
+    bg: "linear-gradient(135deg,#FDE8D8,#F5C9A0)",
+    cat: "postres", unidad: "pieza",
+    fotos: []
+  },
+  {
+    nombre: "Gelatina de Leche",
+    desc: "Gelatina artesanal de leche condensada, fresca y perfecta para el calor.",
+    precio: 35, emoji: "🟠",
+    bg: "linear-gradient(135deg,#FFF0E5,#FFD9BE)",
+    cat: "postres", unidad: "pieza",
+    fotos: []
+  },
+  {
+    nombre: "Pay de Queso",
+    desc: "Base de galleta y relleno cremoso de queso crema. Sin horno, sin igual.",
+    precio: 65, emoji: "🥧",
+    bg: "linear-gradient(135deg,#F8F0FF,#E8D5F5)",
+    cat: "pasteles", unidad: "rebanada",
+    fotos: []
+  },
+  {
+    nombre: "Arroz con Leche",
+    desc: "Receta tradicional con canela y leche entera. Porciones generosas.",
+    precio: 30, emoji: "🍚",
+    bg: "linear-gradient(135deg,#FFF9E8,#FFEFC2)",
+    cat: "postres", unidad: "porción",
+    fotos: []
+  },
+  {
+    nombre: "Agua de Jamaica",
+    desc: "Fresca infusión de flor de jamaica con el dulzor justo. Botella 1L.",
+    precio: 40, emoji: "🫙",
+    bg: "linear-gradient(135deg,#FFE5F0,#FFBDD6)",
+    cat: "bebidas", unidad: "litro",
+    fotos: []
+  },
+  {
+    nombre: "Buñuelos de Viento",
+    desc: "Crujientes y ligeros, espolvoreados con azúcar y canela. Docena.",
+    precio: 55, emoji: "🌀",
+    bg: "linear-gradient(135deg,#FFF5DC,#FFE8A0)",
+    cat: "pasteles", unidad: "docena",
+    fotos: []
+  },
+  {
+    nombre: "Atole de Guayaba",
+    desc: "Atole artesanal espeso y cremoso con guayaba natural. Jarra 1L.",
+    precio: 45, emoji: "🍵",
+    bg: "linear-gradient(135deg,#FFE8E0,#FFC9B5)",
+    cat: "bebidas", unidad: "litro",
+    fotos: []
+  },
+];
+
+/* ── Estado de carruseles ── */
+const state = {};
+
+function buildCarousel(p, cid) {
+  const hasPhotos = p.fotos && p.fotos.length > 0;
+  const count = hasPhotos ? p.fotos.length : 1;
+  state[cid] = { cur: 0, count };
+
+  let slidesHTML = '';
+  if (hasPhotos) {
+    p.fotos.forEach((src, i) => {
+      slidesHTML += `<div class="carousel-slide"><img src="${src}" alt="${p.nombre} foto ${i+1}" loading="lazy" onerror="this.parentElement.style.background='${p.bg}';this.style.display='none'"></div>`;
+    });
+  } else {
+    slidesHTML = `<div class="carousel-slide emoji-slide" style="background:${p.bg}">${p.emoji}</div>`;
+  }
+
+  const arrows = count > 1 ? `
+    <button class="carousel-btn prev" onclick="move('${cid}',-1)" aria-label="anterior">&#8249;</button>
+    <button class="carousel-btn next" onclick="move('${cid}',1)" aria-label="siguiente">&#8250;</button>` : '';
+
+  const dots = count > 1 ? `<div class="carousel-dots" id="dots-${cid}">`
+    + Array.from({length:count},(_,i)=>`<button class="dot${i===0?' on':''}" onclick="goTo('${cid}',${i})" aria-label="foto ${i+1}"></button>`).join('')
+    + `</div>` : '';
+
+  const counter = count > 1 ? `<div class="carousel-counter" id="cnt-${cid}">1 / ${count}</div>` : '';
+
+  return `<div class="carousel" id="car-${cid}">
+    <div class="carousel-track" id="trk-${cid}">${slidesHTML}</div>
+    ${arrows}${dots}${counter}
+  </div>`;
+}
+
+function goTo(cid, idx) {
+  const s = state[cid];
+  idx = ((idx % s.count) + s.count) % s.count;
+  s.cur = idx;
+  document.getElementById(`trk-${cid}`).style.transform = `translateX(-${idx*100}%)`;
+  const dotsEl = document.getElementById(`dots-${cid}`);
+  if (dotsEl) dotsEl.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===idx));
+  const cntEl = document.getElementById(`cnt-${cid}`);
+  if (cntEl) cntEl.textContent = `${idx+1} / ${s.count}`;
+}
+
+function move(cid, dir) {
+  goTo(cid, state[cid].cur + dir);
+}
+
+/* Swipe táctil */
+function addSwipe(cid) {
+  const el = document.getElementById(`car-${cid}`);
+  if (!el) return;
+  let sx = 0;
+  el.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, {passive:true});
+  el.addEventListener('touchend', e => {
+    const d = sx - e.changedTouches[0].clientX;
+    if (Math.abs(d) > 40) move(cid, d > 0 ? 1 : -1);
+  });
+}
+
+/* ── Render ── */
+let uidCounter = 0;
+function renderMenu(cat) {
+  const grid = document.getElementById('menuGrid');
+  const lista = cat === 'todos' ? productos : productos.filter(p=>p.cat===cat);
+  grid.innerHTML = '';
+  lista.forEach(p => {
+    const cid = 'c' + (++uidCounter);
+    const card = document.createElement('div');
+    card.className = 'menu-card';
+    card.innerHTML = `
+      ${buildCarousel(p, cid)}
+      <div class="card-body">
+        <p class="card-tag">${p.cat}</p>
+        <h3 class="card-name">${p.nombre}</h3>
+        <p class="card-desc">${p.desc}</p>
+        <div class="card-footer">
+          <div class="card-price">$${p.precio} <span>/ ${p.unidad}</span></div>
+          <button class="card-btn" onclick="pedirProducto('${p.nombre}',${p.precio})">Pedir 🛒</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    addSwipe(cid);
+  });
+}
+
+function filterMenu(cat, btn) {
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(cat);
+}
+
+function pedirProducto(nombre, precio) {
+  const msg = encodeURIComponent(`Hola! 👋 Me interesa ordenar:\n\n🍮 *${nombre}* — $${precio}\n\n¿Tienen disponibilidad?`);
+  window.open(`https://wa.me/5212345678901?text=${msg}`, '_blank');
+  showToast(`¡Redirigiendo a WhatsApp para pedir ${nombre}! 🎉`);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+renderMenu('todos');
+</script>
+</body>
+</html>
