@@ -170,41 +170,51 @@
     box-shadow: 0 16px 48px rgba(59,31,14,.14);
   }
 
-  /* CARRUSEL */
+  /* CARRUSEL: allow slides to grow with the image and show it whole */
   .carousel {
     position: relative;
-    height: 320px;
+    /* allow carousel to grow according to the image's natural size
+       but keep a reasonable limit on very tall photos */
+    max-height: 80vh;
+    /* keep a minimum so emoji-only cards don't collapse completely */
+    min-height: 240px;
     overflow: hidden;
     background: #f5ede0;
     flex-shrink: 0;
   }
   .carousel-track {
     display: flex;
-    height: 100%;
     transition: transform .45s cubic-bezier(.4,0,.2,1);
     will-change: transform;
   }
   .carousel-slide {
     min-width: 100%;
-    height: 100%;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    /* the slide height is determined by its content (the image) */
   }
   .carousel-slide img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    object-fit: contain;          /* show the whole photo, no cropping */
     display: block;
+  }
     cursor: zoom-in;          /* ← cursor de lupa */
     transition: transform .3s;
   }
   .carousel-slide img:hover {
     transform: scale(1.03);   /* ← leve zoom al pasar el mouse */
   }
-  .carousel-slide.emoji-slide { font-size: 7rem; }
+  .carousel-slide.emoji-slide {
+    font-size: 7rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   /* Hint "toca para ampliar" */
   .zoom-hint {
