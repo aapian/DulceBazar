@@ -170,14 +170,10 @@
     box-shadow: 0 16px 48px rgba(59,31,14,.14);
   }
 
-  /* CARRUSEL: fixed height so all cards are identical while
-     the image inside is fully visible. photos should be sized
-     externally / with an editor to roughly the same ratio (4:3,
-     3:2, etc.), but CSS scales any input so you always see the entire
-     picture without cropping. */
+  /* CARRUSEL */
   .carousel {
     position: relative;
-    height: 420px;             /* larger image area for better view */
+    height: 420px;
     overflow: hidden;
     background: #f5ede0;
     flex-shrink: 0;
@@ -193,20 +189,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* image will scale to fit within the fixed-height carousel */
   }
   .carousel-slide img {
     width: 100%;
     height: auto;
-    max-height: 100%;            /* never exceed container height */
-    object-fit: contain;          /* show the whole photo, no cropping */
+    max-height: 100%;
+    object-fit: contain;
     display: block;
-  }
-    cursor: zoom-in;          /* ← cursor de lupa */
+    cursor: pointer;
     transition: transform .3s;
   }
   .carousel-slide img:hover {
-    transform: scale(1.03);   /* ← leve zoom al pasar el mouse */
+    transform: scale(1.08);
   }
   .carousel-slide.emoji-slide {
     font-size: 7rem;
@@ -321,47 +315,52 @@
   .card-btn:hover { background:var(--caramel);transform:scale(1.04); }
 
   /* ═══════════════════════════════════
-     LIGHTBOX
+     LIGHTBOX MEJORADO - VERSIÓN 2.0
   ═══════════════════════════════════ */
   .lightbox {
     position: fixed;
     inset: 0;
     z-index: 9999;
     background: rgba(0,0,0,0);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
-    visibility: hidden;
     transition: background .35s;
+    backdrop-filter: blur(0px);
   }
   .lightbox.open {
-    visibility: visible;
-    background: rgba(0,0,0,.88);
+    display: flex;
+    background: rgba(0,0,0,.94);
+    backdrop-filter: blur(5px);
   }
 
   /* Imagen dentro del lightbox */
   .lb-img-wrap {
     position: relative;
-    max-width: min(90vw, 900px);
+    max-width: min(95vw, 1000px);
     max-height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: scale(.85);
+    transform: scale(.75) translateY(20px);
     opacity: 0;
-    transition: transform .35s cubic-bezier(.34,1.3,.64,1), opacity .3s;
+    transition: transform .40s cubic-bezier(.34,1.3,.64,1), opacity .35s ease;
+    pointer-events: none;
   }
   .lightbox.open .lb-img-wrap {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
     opacity: 1;
+    pointer-events: auto;
   }
 
   .lb-img-wrap img {
+    width: 100%;
+    height: auto;
     max-width: 100%;
     max-height: 85vh;
     border-radius: 12px;
-    box-shadow: 0 24px 80px rgba(0,0,0,.6);
+    box-shadow: 0 24px 80px rgba(0,0,0,.9);
     display: block;
     object-fit: contain;
   }
@@ -369,13 +368,13 @@
   /* Nombre del producto */
   .lb-title {
     position: absolute;
-    bottom: -2.4rem;
+    bottom: -3rem;
     left: 0;
     right: 0;
     text-align: center;
-    color: rgba(255,255,255,.75);
+    color: rgba(255,255,255,.85);
     font-family: 'Playfair Display', serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-style: italic;
     pointer-events: none;
   }
@@ -385,58 +384,84 @@
     position: fixed;
     top: 1.2rem;
     right: 1.4rem;
-    background: rgba(255,255,255,.15);
-    border: 1.5px solid rgba(255,255,255,.25);
+    background: rgba(255,255,255,.18);
+    border: 1.5px solid rgba(255,255,255,.3);
     color: white;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background .2s, transform .2s;
+    transition: all .2s;
     z-index: 10000;
+    backdrop-filter: blur(10px);
   }
-  .lb-close:hover { background: rgba(255,255,255,.28); transform: scale(1.1) rotate(90deg); }
+  .lightbox:not(.open) .lb-close {
+    display: none;
+  }
+  .lb-close:hover { 
+    background: rgba(255,255,255,.3);
+    transform: scale(1.15) rotate(90deg);
+  }
+  .lb-close:active {
+    transform: scale(0.95);
+  }
 
   /* Flechas del lightbox */
   .lb-arrow {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255,255,255,.12);
-    border: 1.5px solid rgba(255,255,255,.2);
+    background: rgba(255,255,255,.14);
+    border: 1.5px solid rgba(255,255,255,.25);
     color: white;
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    font-size: 26px;
+    font-size: 28px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background .2s, transform .2s;
+    transition: all .2s;
     z-index: 10000;
     user-select: none;
+    backdrop-filter: blur(10px);
   }
-  .lb-arrow:hover { background: rgba(255,255,255,.25); }
+  .lightbox:not(.open) .lb-arrow {
+    display: none;
+  }
+  .lb-arrow:hover { 
+    background: rgba(255,255,255,.28);
+    transform: translateY(-50%) scale(1.12);
+  }
+  .lb-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+  }
   .lb-arrow.lb-prev { left: 1.2rem; }
   .lb-arrow.lb-next { right: 1.2rem; }
-  .lb-arrow[hidden] { display: none; }
 
   /* Contador lightbox */
   .lb-counter {
     position: fixed;
-    bottom: 1.4rem;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(255,255,255,.6);
-    font-size: .8rem;
+    color: rgba(255,255,255,.75);
+    font-size: .85rem;
     letter-spacing: .1em;
     pointer-events: none;
     z-index: 10000;
+    background: rgba(0,0,0,.5);
+    padding: 8px 18px;
+    border-radius: 100px;
+    backdrop-filter: blur(10px);
+  }
+  .lightbox:not(.open) .lb-counter {
+    display: none;
   }
 
   /* BANNER */
@@ -487,13 +512,25 @@
     .nav-links { display:none; }
     .menu-grid { grid-template-columns: 1fr; }
     .carousel { height: 300px; }
-    .lb-arrow { width:42px;height:42px;font-size:20px; }
+    .lb-arrow { width:44px;height:44px;font-size:20px; }
+    .lb-close { width:40px;height:40px;font-size:1.2rem;top:0.8rem;right:0.8rem; }
+    .lb-img-wrap { max-width: 98vw; max-height: 80vh; }
+    .lb-title { bottom: -2.2rem; font-size: 0.95rem; }
+    .lb-counter { font-size: .75rem; padding: 6px 12px; bottom: 1.2rem; }
+  }
+
+  @media(max-width:480px){
+    .carousel { height: 250px; }
+    .carousel-btn { width: 36px; height: 36px; font-size: 18px; }
+    .carousel-prev { left: 8px; }
+    .carousel-next { right: 8px; }
+    .lb-title { bottom: -1.8rem; font-size: 0.9rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- ═══════ LIGHTBOX ═══════ -->
+<!-- ═══════ LIGHTBOX MEJORADO ═══════ -->
 <div class="lightbox" id="lightbox" onclick="lbClickOutside(event)">
   <button class="lb-close" onclick="closeLightbox()" aria-label="Cerrar">✕</button>
   <button class="lb-arrow lb-prev" id="lbPrev" onclick="lbMove(-1)" aria-label="Anterior">&#8249;</button>
@@ -563,24 +600,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/*
-  ╔══════════════════════════════════════════════════════╗
-  ║  CÓMO AGREGAR FOTOS A CADA PRODUCTO                  ║
-  ║                                                      ║
-  ║  Pon las rutas dentro de fotos: [...]                ║
-  ║  Las fotos deben estar en la carpeta "imagenes/"     ║
-  ║                                                      ║
-  ║  Ejemplo:                                            ║
-  ║    fotos: [                                          ║
-  ║      "imagenes/flan1.jpg",                           ║
-  ║      "imagenes/flan2.jpg",                           ║
-  ║      "imagenes/flan3.jpg"                            ║
-  ║    ]                                                 ║
-  ║                                                      ║
-  ║  Si dejas fotos: []  →  se muestra el emoji          ║
-  ╚══════════════════════════════════════════════════════╝
-*/
-
 const productos = [
   {
     nombre: "Flan de leche Condensada",
@@ -616,29 +635,39 @@ const productos = [
   },
 ];
 
-/* ════════════════════════════════
-   LIGHTBOX
-════════════════════════════════ */
 let lbPhotos = [];
 let lbIndex  = 0;
 let lbName   = '';
 
 function openLightbox(fotos, idx, nombre) {
+  console.log("🔍 Abriendo lightbox - Fotos:", fotos, "Index:", idx, "Nombre:", nombre);
+  
+  if (!Array.isArray(fotos) || fotos.length === 0) {
+    console.warn('⚠️ No hay fotos para mostrar:', nombre);
+    return;
+  }
+  
   lbPhotos = fotos;
-  lbIndex  = idx;
+  lbIndex  = Math.max(0, Math.min(idx, fotos.length - 1));
   lbName   = nombre;
+  
   updateLightbox();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
+  
+  console.log("✅ Lightbox abierto");
 }
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
   document.body.style.overflow = '';
+  console.log("❌ Lightbox cerrado");
 }
 
 function lbClickOutside(e) {
-  if (e.target === document.getElementById('lightbox')) closeLightbox();
+  if (e.target === document.getElementById('lightbox')) {
+    closeLightbox();
+  }
 }
 
 function lbMove(dir) {
@@ -647,28 +676,34 @@ function lbMove(dir) {
 }
 
 function updateLightbox() {
-  document.getElementById('lbImg').src = lbPhotos[lbIndex];
-  document.getElementById('lbImg').alt = lbName + ' foto ' + (lbIndex + 1);
+  const img = document.getElementById('lbImg');
+  img.src = lbPhotos[lbIndex];
+  img.alt = lbName + ' foto ' + (lbIndex + 1);
   document.getElementById('lbTitle').textContent = lbName;
 
   const total = lbPhotos.length;
-  document.getElementById('lbCounter').textContent = total > 1 ? `${lbIndex + 1} / ${total}` : '';
+  const counterEl = document.getElementById('lbCounter');
+  if (total > 1) {
+    counterEl.textContent = `${lbIndex + 1} / ${total}`;
+  } else {
+    counterEl.textContent = '';
+  }
+  
   document.getElementById('lbPrev').hidden = total <= 1;
   document.getElementById('lbNext').hidden = total <= 1;
 }
 
-// Cerrar con tecla Escape y navegar con flechas del teclado
 document.addEventListener('keydown', e => {
   const lb = document.getElementById('lightbox');
   if (!lb.classList.contains('open')) return;
-  if (e.key === 'Escape')      closeLightbox();
-  if (e.key === 'ArrowRight')  lbMove(1);
-  if (e.key === 'ArrowLeft')   lbMove(-1);
+  
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') lbMove(1);
+  if (e.key === 'ArrowLeft') lbMove(-1);
+  
+  console.log("⌨️ Tecla presionada:", e.key);
 });
 
-/* ════════════════════════════════
-   CARRUSEL
-════════════════════════════════ */
 const state = {};
 
 function buildCarousel(p, cid) {
@@ -679,7 +714,6 @@ function buildCarousel(p, cid) {
   let slidesHTML = '';
   if (hasPhotos) {
     p.fotos.forEach((src, i) => {
-      // Al hacer click en la imagen → abre lightbox
       slidesHTML += `<div class="carousel-slide">
         <img src="${src}" alt="${p.nombre} foto ${i+1}" loading="lazy"
              onclick="openLightbox(${JSON.stringify(p.fotos)}, ${i}, '${p.nombre.replace(/'/g,"\\'")}' )"
@@ -736,9 +770,6 @@ function addSwipe(cid) {
   });
 }
 
-/* ════════════════════════════════
-   RENDER
-════════════════════════════════ */
 let uidCounter = 0;
 function renderMenu(cat) {
   const grid = document.getElementById('menuGrid');
